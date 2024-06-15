@@ -34,10 +34,12 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchTerm = searchBar.text!
-        guard searchTerm.count != 0 else { return }
-        searchAPIURLString = "https://api.github.com/search/repositories?q=\(searchTerm!)"
-        URLSession.shared.dataTask(with: URL(string: searchAPIURLString)!) { [weak self] data, response, error in
+        guard let searchTerm = searchBar.text, !searchTerm.isEmpty else { return }
+        self.searchTerm = searchTerm
+        searchAPIURLString = "https://api.github.com/search/repositories?q=\(searchTerm)"
+        guard let url = URL(string: searchAPIURLString) else { return }
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            
             guard let self = self else { return }
             guard let data = data, let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
             if let items = json["items"] as? [[String: Any]] {
@@ -51,7 +53,7 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "Detail" else { return }
-        let repositoryDetailViewController = segue.destination as! RepositoryDetailViewController
+        guard let repositoryDetailViewController = segue.destination as? RepositoryDetailViewController else { return }
         repositoryDetailViewController.repositorySearchViewController = self
     }
     
