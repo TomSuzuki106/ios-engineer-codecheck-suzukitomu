@@ -17,11 +17,15 @@ class RepositoryDetailViewController: UIViewController {
     @IBOutlet weak var watchersCountLabel: UILabel!
     @IBOutlet weak var forksCountLabel: UILabel!
     @IBOutlet weak var openIssuesCountLabel: UILabel!
-    var repositorySearchViewController: RepositorySearchViewController!
+    var repositorySearchViewController: RepositorySearchViewController?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let repository = repositorySearchViewController.searchRepositories[repositorySearchViewController.selectedRowIndex]
+        guard let searchViewController = repositorySearchViewController else { return }
+        guard let selectedIndex = searchViewController.selectedRowIndex else { return }
+        let repository = searchViewController.searchRepositories[selectedIndex]
+        
         programmingLanguageLabel.text = "Written in \(repository["language"] as? String ?? "")"
         stargazersCountLabel.text = "\(repository["stargazers_count"] as? Int ?? 0) stars"
         watchersCountLabel.text = "\(repository["wachers_count"] as? Int ?? 0) watchers"
@@ -31,7 +35,9 @@ class RepositoryDetailViewController: UIViewController {
     }
     
     func fetchRepositoryImage() {
-        let repository = repositorySearchViewController.searchRepositories[repositorySearchViewController.selectedRowIndex]
+        guard let searchViewController = repositorySearchViewController else { return }
+        guard let selectedIndex = searchViewController.selectedRowIndex else { return }
+        let repository = searchViewController.searchRepositories[selectedIndex]
         repositoryNameLabel.text = repository["full_name"] as? String
         guard let owner = repository["owner"] as? [String: Any] else { return }
         guard let avatarURLString = owner["avatar_url"] as? String else { return }
