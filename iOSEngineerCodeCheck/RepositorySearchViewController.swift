@@ -99,6 +99,8 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedRowIndex = indexPath.row
-        performSegue(withIdentifier: "Detail", sender: self)
+        let detailViewController = RepositoryDetailViewController()
+        detailViewController.repositorySearchViewController = self
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
