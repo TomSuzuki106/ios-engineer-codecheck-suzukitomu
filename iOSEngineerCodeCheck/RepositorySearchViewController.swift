@@ -13,9 +13,8 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
     @IBOutlet weak var searchBar: UISearchBar!
     var searchRepositories: [[String: Any]] = []
     var searchTaskForRepositories: URLSessionTask?
-    var searchTerm: String!
-    var searchAPIURLString: String!
-    var selectedRowIndex: Int!
+    var searchTerm: String?
+    var selectedRowIndex: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +35,8 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchTerm = searchBar.text, !searchTerm.isEmpty else { return }
         self.searchTerm = searchTerm
-        searchAPIURLString = "https://api.github.com/search/repositories?q=\(searchTerm)"
-        guard let url = URL(string: searchAPIURLString) else { return }
+        let apiURLString = "https://api.github.com/search/repositories?q=\(searchTerm)"
+        guard let url = URL(string: apiURLString) else { return }
         URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             
             guard let self = self else { return }
