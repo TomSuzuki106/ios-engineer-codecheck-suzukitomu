@@ -36,7 +36,7 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         dataTask?.cancel()
     }
-
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchQuery = searchBar.text!
         guard searchQuery.count != 0 else { return }
@@ -52,7 +52,7 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
             }
         }.resume()  // これ呼ばなきゃリストが更新されません
     }
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "Detail" else { return }
         let repositoryDetailViewController = segue.destination as! RepositoryDetailViewController
