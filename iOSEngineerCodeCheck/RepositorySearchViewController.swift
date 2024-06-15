@@ -40,7 +40,14 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
         URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             
             guard let self = self else { return }
-            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
+            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                print("Failed to fetch JSON data")
+                // ユーザーにエラーメッセージを表示
+                DispatchQueue.main.async {
+                    self.showErrorAlert(message: "データの取得に失敗しました。インターネット接続を確認してください。")
+                }
+                return
+            }
             if let items = json["items"] as? [[String: Any]] {
                 self.searchRepositories = items
                 DispatchQueue.main.async {
@@ -48,6 +55,14 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
                 }
             }
         }.resume()  // データタスクを実行
+    }
+    
+    // エラーメッセージを表示するためのヘルパーメソッド
+    func showErrorAlert(message: String) {
+        let alertController = UIAlertController(title: "エラー", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
