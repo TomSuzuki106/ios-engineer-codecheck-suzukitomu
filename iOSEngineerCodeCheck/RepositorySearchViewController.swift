@@ -36,36 +36,27 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         dataTask?.cancel()
     }
-    
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
         searchQuery = searchBar.text!
-        
-        if searchQuery.count != 0 {
-            searchURL = "https://api.github.com/search/repositories?q=\(searchQuery!)"
-            dataTask = URLSession.shared.dataTask(with: URL(string: searchURL)!) { (data, res, err) in
-                if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-                    if let items = obj["items"] as? [[String: Any]] {
-                        self.repositories = items
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                        }
-                    }
+        guard searchQuery.count != 0 else { return }
+        searchURL = "https://api.github.com/search/repositories?q=\(searchQuery!)"
+        URLSession.shared.dataTask(with: URL(string: searchURL)!) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
+            if let items = json["items"] as? [[String: Any]] {
+                self.repositories = items
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
                 }
             }
-            // これ呼ばなきゃリストが更新されません
-            dataTask?.resume()
-        }
-        
+        }.resume()  // これ呼ばなきゃリストが更新されません
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "Detail"{
-            let detailViewController = segue.destination as! RepositoryDetailViewController
-            detailViewController.repositorySearchViewController = self
-        }
-        
+        guard segue.identifier == "Detail" else { return }
+        let repositoryDetailViewController = segue.destination as! RepositoryDetailViewController
+        repositoryDetailViewController.repositorySearchViewController = self
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
