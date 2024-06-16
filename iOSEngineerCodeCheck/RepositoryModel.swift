@@ -1,5 +1,5 @@
 //
-// RepositoryModel.swift
+//  RepositoryModel.swift
 //  iOSEngineerCodeCheck
 //
 //  Created by 鈴木斗夢 on 2024/06/16.
@@ -10,7 +10,6 @@
 struct RepositoriesResponse: Codable {
     let items: [RepositoryModel]
 }
-
 
 struct RepositoryModel: Codable {
     let fullName: String

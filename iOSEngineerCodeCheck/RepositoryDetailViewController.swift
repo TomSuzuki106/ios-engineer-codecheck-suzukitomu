@@ -31,12 +31,13 @@ class RepositoryDetailViewController: UIViewController {
         guard let selectedIndex = searchViewController.selectedRowIndex else { return }
         let repository = searchViewController.searchRepositories[selectedIndex]
         
-        programmingLanguageLabel.text = "Written in \(repository["language"] as? String ?? "")"
-        stargazersCountLabel.text = "\(repository["stargazers_count"] as? Int ?? 0) stars"
-        watchersCountLabel.text = "\(repository["wachers_count"] as? Int ?? 0) watchers"
-        forksCountLabel.text = "\(repository["forks_count"] as? Int ?? 0) forks"
-        openIssuesCountLabel.text = "\(repository["open_issues_count"] as? Int ?? 0) open issues"
-        fetchRepositoryImage()
+        repositoryNameLabel.text = repository.fullName
+        programmingLanguageLabel.text = "Written in \(repository.language ?? "Unknown")"
+        stargazersCountLabel.text = "\(repository.stargazersCount) stars"
+        watchersCountLabel.text = "\(repository.watchersCount) watchers"
+        forksCountLabel.text = "\(repository.forksCount) forks"
+        openIssuesCountLabel.text = "\(repository.openIssuesCount) open issues"
+        fetchRepositoryImage(from: repository.owner.avatarURL)
     }
     
     // デバイスの画面の向きが変更されるときに呼び出されるメソッド
@@ -130,26 +131,17 @@ class RepositoryDetailViewController: UIViewController {
         label.font = isBold ? UIFont.boldSystemFont(ofSize: fontSize) : UIFont.systemFont(ofSize: fontSize)
     }
     
-    private func fetchRepositoryImage() {
-        guard let searchViewController = repositorySearchViewController else { return }
-        guard let selectedIndex = searchViewController.selectedRowIndex else { return }
-        let repository = searchViewController.searchRepositories[selectedIndex]
-        repositoryNameLabel.text = repository["full_name"] as? String
-        guard let owner = repository["owner"] as? [String: Any] else { return }
-        guard let avatarURLString = owner["avatar_url"] as? String else { return }
-        guard let avatarURL = URL(string: avatarURLString) else { return }
-        URLSession.shared.dataTask(with: avatarURL) { [weak self] (data, response, error) in
-            guard let self = self else { return }
-            if let error = error {
-                print("Failed to fetch image: \(error)")
-                self.showPlaceholderImage()
-                return
+    func fetchRepositoryImage(from urlString: String) {
+        NetworkManager.shared.fetchRepositoryImage(from: urlString) { [weak self] result in
+            switch result {
+            case .success(let img):
+                DispatchQueue.main.async {
+                    self?.repositoryImageView.image = img
+                }
+            case .failure:
+                self?.showPlaceholderImage()
             }
-            guard let imageData = data, let image = UIImage(data: imageData) else { return }
-            DispatchQueue.main.async {
-                self.repositoryImageView.image = image
-            }
-        }.resume()
+        }
     }
     private func showPlaceholderImage() {
         DispatchQueue.main.async {
