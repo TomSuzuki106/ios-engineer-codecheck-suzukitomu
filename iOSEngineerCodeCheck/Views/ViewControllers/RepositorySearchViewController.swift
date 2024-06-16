@@ -51,19 +51,26 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchTerm = searchBar.text, !searchTerm.isEmpty else { return }
+        searchRepositories(with: searchTerm)
+    }
 
+    private func searchRepositories(with searchTerm: String) {
         NetworkManager.shared.searchRepositories(with: searchTerm) { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .success(let repositories):
-                self.searchRepositories = repositories
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.showErrorAlert(for: error)
-                }
+            self.handleSearchResult(result)
+        }
+    }
+
+    private func handleSearchResult(_ result: Result<[RepositoryModel], Error>) {
+        switch result {
+        case .success(let repositories):
+            self.searchRepositories = repositories
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        case .failure(let error):
+            DispatchQueue.main.async {
+                self.showErrorAlert(for: error)
             }
         }
     }
