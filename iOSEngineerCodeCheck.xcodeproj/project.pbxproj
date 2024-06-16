@@ -18,6 +18,7 @@
 		E2054CE22C1F150F0044D738 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2054CE12C1F150F0044D738 /* NetworkManager.swift */; };
 		E2054CE42C1F15620044D738 /* RepositoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2054CE32C1F15610044D738 /* RepositoryModel.swift */; };
 		E28F1FA12C1E153E00591A37 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28F1FA02C1E153E00591A37 /* Extensions.swift */; };
+		E2E185702C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E1856F2C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		E2054CE12C1F150F0044D738 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		E2054CE32C1F15610044D738 /* RepositoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryModel.swift; sourceTree = "<group>"; };
 		E28F1FA02C1E153E00591A37 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		E2E1856F2C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubRepositoryImageFetcher.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				E2054CE12C1F150F0044D738 /* NetworkManager.swift */,
+				E2E1856F2C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				E28F1FA12C1E153E00591A37 /* Extensions.swift in Sources */,
 				BFD945E3244DC5E80012785A /* RepositorySearchViewController.swift in Sources */,
 				BF0A658D244F2A3B00280FA6 /* RepositoryDetailViewController.swift in Sources */,
+				E2E185702C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift in Sources */,
 				BFD945DF244DC5E80012785A /* AppDelegate.swift in Sources */,
 				E2054CE42C1F15620044D738 /* RepositoryModel.swift in Sources */,
 				BFD945E1244DC5E80012785A /* SceneDelegate.swift in Sources */,
