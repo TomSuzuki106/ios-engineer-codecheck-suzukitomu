@@ -140,11 +140,21 @@ class RepositoryDetailViewController: UIViewController {
         guard let avatarURL = URL(string: avatarURLString) else { return }
         URLSession.shared.dataTask(with: avatarURL) { [weak self] (data, response, error) in
             guard let self = self else { return }
+            if let error = error {
+                print("Failed to fetch image: \(error)")
+                self.showPlaceholderImage()
+                return
+            }
             guard let imageData = data, let image = UIImage(data: imageData) else { return }
             DispatchQueue.main.async {
                 self.repositoryImageView.image = image
             }
         }.resume()
-
+    }
+    private func showPlaceholderImage() {
+        DispatchQueue.main.async {
+            let placeholderImage = UIImage(named: "placeholder")
+            self.repositoryImageView.image = placeholderImage
+        }
     }
 }
