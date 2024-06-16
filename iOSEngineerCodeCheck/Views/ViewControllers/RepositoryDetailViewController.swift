@@ -17,8 +17,9 @@ class RepositoryDetailViewController: UIViewController {
     let watchersCountLabel = UILabel()
     let forksCountLabel = UILabel()
     let openIssuesCountLabel = UILabel()
-    var repository: RepositoryModel?
-
+    var repository: RepositoryModel
+    var viewModel: RepositoryDetailViewModel!
+    
     init(repository: RepositoryModel) {
         self.repository = repository
         super.init(nibName: nil, bundle: nil)
@@ -30,9 +31,13 @@ class RepositoryDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setupData()
         self.setupUI()
-        guard let repository = repository else { return }
-
+        viewModel = RepositoryDetailViewModel(repository: repository, delegate: self)
+        viewModel.fetchRepositoryImage()
+    }
+    
+    private func setupData() {
         repositoryNameLabel.text = repository.fullName
         programmingLanguageLabel.text = "Written in \(repository.language ?? "Unknown")"
         stargazersCountLabel.text = "\(repository.stargazersCount) stars"
@@ -136,8 +141,16 @@ class RepositoryDetailViewController: UIViewController {
             }
         }
     }
+}
+
+extension RepositoryDetailViewController: RepositoryDetailViewModelDelegate {
+    func updateRepositoryImage(_ image: UIImage?) {
+        DispatchQueue.main.async {
+            self.repositoryImageView.image = image
+        }
+    }
     
-    private func showPlaceholderImage() {
+    func showPlaceholderImage() {
         DispatchQueue.main.async {
             let placeholderImage = UIImage(named: "placeholder")
             self.repositoryImageView.image = placeholderImage

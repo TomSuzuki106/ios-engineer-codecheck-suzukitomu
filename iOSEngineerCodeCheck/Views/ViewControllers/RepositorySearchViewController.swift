@@ -8,12 +8,11 @@
 
 import UIKit
 
-class RepositorySearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UINavigationControllerDelegate {
+class RepositorySearchViewController: UIViewController {
     
     let searchBar = UISearchBar()
     let tableView = UITableView()
-    var searchRepositories: [RepositoryModel] = []
-    var selectedRowIndex: Int?
+    var viewModel: RepositorySearchViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +24,7 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
+        viewModel = RepositorySearchViewModel(delegate: self)
     }
     
     // RepositorySearchViewControllerの破棄時に、URLSessionTaskを解放
@@ -38,44 +38,53 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
         searchBar.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 56)
         tableView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
     }
-    
-//    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-//        // 検索バーの初期値を削除
-//        searchBar.text = ""
-//        return true
-//    }
-    
+}
+
+extension RepositorySearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         GitHubRepositorySearcher.shared.cancelSearch()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchTerm = searchBar.text, !searchTerm.isEmpty else { return }
-        searchRepositories(with: searchTerm)
+        viewModel.searchRepositories(with: searchTerm)
     }
+}
 
-    private func searchRepositories(with searchTerm: String) {
-        GitHubRepositorySearcher.shared.searchRepositories(with: searchTerm) { [weak self] result in
-            guard let self = self else { return }
-            self.handleSearchResult(result)
+extension RepositorySearchViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.searchRepositories.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        let repository = viewModel.searchRepositories[indexPath.row]
+        cell.textLabel?.text = repository.fullName
+        cell.detailTextLabel?.text = repository.language
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let repository = viewModel.searchRepositories[indexPath.row]
+        let detailViewController = RepositoryDetailViewController(repository: repository)
+        navigationController?.pushViewController(detailViewController, animated: true)
+    }
+}
+
+extension RepositorySearchViewController: RepositorySearchViewModelDelegate {
+    func updateRepositories() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
     }
-
-    private func handleSearchResult(_ result: Result<[RepositoryModel], Error>) {
-        switch result {
-        case .success(let repositories):
-            self.searchRepositories = repositories
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        case .failure(let error):
-            DispatchQueue.main.async {
-                self.showErrorAlert(for: error)
-            }
+    
+    func showError(message: Error) {
+        DispatchQueue.main.async {
+            self.showErrorAlert(for: message)
         }
     }
-
-    func showErrorAlert(for error: Error) {
+    
+    private func showErrorAlert(for error: Error) {
         let message: String
         switch error {
         case is URLError:
@@ -88,24 +97,5 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
         alertController.addAction(okAction)
         present(alertController, animated: true, completion: nil)
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchRepositories.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
-        guard indexPath.row < searchRepositories.count else { return cell }
-        let repository = searchRepositories[indexPath.row]
-        cell.textLabel?.text = repository.fullName
-        cell.detailTextLabel?.text = repository.language
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.row < searchRepositories.count else { return }
-        let repository = searchRepositories[indexPath.row]
-        let detailViewController = RepositoryDetailViewController(repository: repository)
-        navigationController?.pushViewController(detailViewController, animated: true)
-    }
 }
+

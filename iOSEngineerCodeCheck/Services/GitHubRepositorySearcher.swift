@@ -6,7 +6,7 @@
 //  Copyright © 2024 YUMEMI Inc. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 class GitHubRepositorySearcher {
     private var searchTask: URLSessionTask?
