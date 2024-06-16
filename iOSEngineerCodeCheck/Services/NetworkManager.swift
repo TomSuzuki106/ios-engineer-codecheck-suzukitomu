@@ -48,18 +48,22 @@ class NetworkManager {
     func cancelSearch() {
         searchTask?.cancel()
     }
+    
     func fetchRepositoryImage(from urlString: String, completion: @escaping (Result<UIImage?, Error>) -> Void) {
         guard let imgURL = URL(string: urlString) else {
-            completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
+            let error = NSError(domain: "Invalid URL", code: -1, userInfo: nil)
+            completion(.failure(error))
             return
         }
-        
-        URLSession.shared.dataTask(with: imgURL) { data, _, error in
+        fetchImage(from: imgURL, completion: completion)
+    }
+
+    private func fetchImage(from url: URL, completion: @escaping (Result<UIImage?, Error>) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, _, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
-            
             if let data = data, let img = UIImage(data: data) {
                 completion(.success(img))
             } else {
