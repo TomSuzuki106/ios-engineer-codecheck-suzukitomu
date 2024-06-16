@@ -20,6 +20,7 @@
 		E28F1FA12C1E153E00591A37 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28F1FA02C1E153E00591A37 /* Extensions.swift */; };
 		E2E185702C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E1856F2C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift */; };
 		E2E185732C1F85B40086AA12 /* RepositorySearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E185722C1F85B40086AA12 /* RepositorySearchViewModel.swift */; };
+		E2E185772C1F97460086AA12 /* RepositoryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E185762C1F97460086AA12 /* RepositoryDetailViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		E28F1FA02C1E153E00591A37 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E2E1856F2C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubRepositoryImageFetcher.swift; sourceTree = "<group>"; };
 		E2E185722C1F85B40086AA12 /* RepositorySearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositorySearchViewModel.swift; sourceTree = "<group>"; };
+		E2E185762C1F97460086AA12 /* RepositoryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				E2E185722C1F85B40086AA12 /* RepositorySearchViewModel.swift */,
+				E2E185762C1F97460086AA12 /* RepositoryDetailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -347,6 +350,7 @@
 				BFD945DF244DC5E80012785A /* AppDelegate.swift in Sources */,
 				E2054CE42C1F15620044D738 /* RepositoryModel.swift in Sources */,
 				BFD945E1244DC5E80012785A /* SceneDelegate.swift in Sources */,
+				E2E185772C1F97460086AA12 /* RepositoryDetailViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
