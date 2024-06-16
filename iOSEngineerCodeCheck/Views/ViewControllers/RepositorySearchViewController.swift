@@ -47,6 +47,7 @@ extension RepositorySearchViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchTerm = searchBar.text, !searchTerm.isEmpty else { return }
+        searchBar.resignFirstResponder() // キーボードを閉じる
         viewModel.searchRepositories(with: searchTerm)
     }
 }
@@ -98,4 +99,9 @@ extension RepositorySearchViewController: RepositorySearchViewModelDelegate {
         present(alertController, animated: true, completion: nil)
     }
 }
-
+// UIScrollViewDelegateのメソッドをUITableViewDelegateの拡張として実装
+extension RepositorySearchViewController {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.resignFirstResponder() // キーボードを閉じる
+    }
+}
