@@ -17,7 +17,16 @@ class RepositoryDetailViewController: UIViewController {
     let watchersCountLabel = UILabel()
     let forksCountLabel = UILabel()
     let openIssuesCountLabel = UILabel()
-    var repositorySearchViewController: RepositorySearchViewController?
+    var repository: RepositoryModel?
+
+    init(repository: RepositoryModel) {
+        self.repository = repository
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,11 +35,9 @@ class RepositoryDetailViewController: UIViewController {
         // 現在のデバイスの向きを取得して updateLayout を呼び出す
         let currentSize = view.bounds.size
         updateLayout(for: currentSize)
-        
-        guard let searchViewController = repositorySearchViewController else { return }
-        guard let selectedIndex = searchViewController.selectedRowIndex else { return }
-        let repository = searchViewController.searchRepositories[selectedIndex]
-        
+
+        guard let repository = repository else { return }
+
         repositoryNameLabel.text = repository.fullName
         programmingLanguageLabel.text = "Written in \(repository.language ?? "Unknown")"
         stargazersCountLabel.text = "\(repository.stargazersCount) stars"
@@ -143,6 +150,7 @@ class RepositoryDetailViewController: UIViewController {
             }
         }
     }
+    
     private func showPlaceholderImage() {
         DispatchQueue.main.async {
             let placeholderImage = UIImage(named: "placeholder")

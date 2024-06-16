@@ -82,12 +82,6 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
         present(alertController, animated: true, completion: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "Detail" else { return }
-        guard let repositoryDetailViewController = segue.destination as? RepositoryDetailViewController else { return }
-        repositoryDetailViewController.repositorySearchViewController = self
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchRepositories.count
     }
@@ -100,11 +94,11 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
         cell.detailTextLabel?.text = repository.language
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedRowIndex = indexPath.row
-        let detailViewController = RepositoryDetailViewController()
-        detailViewController.repositorySearchViewController = self
+        guard indexPath.row < searchRepositories.count else { return }
+        let repository = searchRepositories[indexPath.row]
+        let detailViewController = RepositoryDetailViewController(repository: repository)
         navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
