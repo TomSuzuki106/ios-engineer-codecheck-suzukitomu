@@ -21,6 +21,7 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
         super.viewDidLoad()
         setupUI()
         title = "Root View Controller"
+        // ビューの背景色を、ダークモードとライトモードに対応した色に設定
         view.backgroundColor = UIColor.dynamicBackgroundColor
         searchBar.text = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self

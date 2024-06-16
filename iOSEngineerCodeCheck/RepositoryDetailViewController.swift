@@ -21,7 +21,12 @@ class RepositoryDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        // ビューの背景色を、ダークモードとライトモードに対応した色に設定
+        view.backgroundColor = UIColor.dynamicBackgroundColor
+        // 現在のデバイスの向きを取得して updateLayout を呼び出す
+        let currentSize = view.bounds.size
+        updateLayout(for: currentSize)
+        
         guard let searchViewController = repositorySearchViewController else { return }
         guard let selectedIndex = searchViewController.selectedRowIndex else { return }
         let repository = searchViewController.searchRepositories[selectedIndex]
@@ -34,11 +39,51 @@ class RepositoryDetailViewController: UIViewController {
         fetchRepositoryImage()
     }
     
-    func setupUI() {
-        // ビューの背景色を設定
-        view.backgroundColor = UIColor.dynamicBackgroundColor
+    // デバイスの画面の向きが変更されるときに呼び出されるメソッド
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: { _ in
+            self.updateLayout(for: size)
+        })
+    }
+    
+    private func updateLayout(for size: CGSize) {
+        view.subviews.forEach { $0.removeConstraints($0.constraints) }
         
-        // リポジトリの画像ビューをビューに追加
+        // 現在のデバイスの向きが横向きかどうかを判定
+        let isLandscape = size.width > size.height
+        if isLandscape {
+            // デバイス横向きの場合のレイアウトを設定
+            setupLandscapeUI()
+        } else {
+            // デバイス縦向きの場合のレイアウトを設定
+            setupPortraitUI()
+        }
+        // ラベルの設定を行う
+        configureLabels()
+    }
+    
+    // デバイス横向きの場合のレイアウトを設定
+    private func setupLandscapeUI() {
+        let rightStackView = UIStackView(arrangedSubviews: [repositoryNameLabel, createLanguageStarStackView(), watchersCountLabel, forksCountLabel, openIssuesCountLabel])
+        rightStackView.axis = .vertical
+        rightStackView.spacing = 16
+        
+        // 左半分に repositoryImageView、右半分に rightStackView を配置するスタックビューを作成
+        let sideBySideStackView = UIStackView(arrangedSubviews: [repositoryImageView, rightStackView])
+        sideBySideStackView.axis = .horizontal
+        sideBySideStackView.spacing = 16
+        sideBySideStackView.distribution = .fillEqually
+        
+        view.addSubview(sideBySideStackView)
+        sideBySideStackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
+        
+        repositoryImageView.setDimensions(height: view.frame.height - 32, width: view.frame.width / 2 - 32)
+    }
+    
+    
+    // デバイス縦向きの場合のレイアウトを設定
+    private func setupPortraitUI() {
         view.addSubview(repositoryImageView)
         
         // プログラミング言語とスター数、ウォッチャー数、フォーク数、オープンイシュー数のラベルを含むスタックビューを作成
@@ -51,41 +96,40 @@ class RepositoryDetailViewController: UIViewController {
         mainStackView.axis = .vertical
         mainStackView.spacing = 16
         
-        // メインスタックビューをビューに追加
         view.addSubview(mainStackView)
         
-        // リポジトリ画像ビューのサイズと位置を設定
         repositoryImageView.setDimensions(height: view.frame.width * 0.9, width: view.frame.width * 0.9)
         repositoryImageView.centerX(inView: view, topAnchor: view.safeAreaLayoutGuide.topAnchor, paddingTop: 32)
         
-        // ラベルの設定を行う
+        mainStackView.anchor(top: repositoryImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 32, paddingLeft: 16, paddingRight: 16)
+    }
+    
+    // ラベルの設定を行う
+    private func configureLabels() {
         configureLabel(label: repositoryNameLabel, textAlignment: .center, fontSize: 24, isBold: true)
         configureLabel(label: programmingLanguageLabel, textAlignment: .left, fontSize: 18, isBold: true)
         configureLabel(label: stargazersCountLabel, textAlignment: .right, fontSize: 18)
         configureLabel(label: watchersCountLabel, textAlignment: .right, fontSize: 18)
         configureLabel(label: forksCountLabel, textAlignment: .right, fontSize: 18)
         configureLabel(label: openIssuesCountLabel, textAlignment: .right, fontSize: 18)
-        
-        // メインスタックビューのアンカーを設定
-        mainStackView.anchor(top: repositoryImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 32, paddingLeft: 16, paddingRight: 16)
     }
-
+    
     // プログラミング言語とスター数のスタックビューを作成するメソッド
-    func createLanguageStarStackView() -> UIStackView {
+    private func createLanguageStarStackView() -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: [programmingLanguageLabel, stargazersCountLabel])
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.distribution = .equalSpacing
         return stackView
     }
-
+    
     // ラベルの設定を行うヘルパーメソッド
-    func configureLabel(label: UILabel, textAlignment: NSTextAlignment, fontSize: CGFloat, isBold: Bool = false) {
+    private func configureLabel(label: UILabel, textAlignment: NSTextAlignment, fontSize: CGFloat, isBold: Bool = false) {
         label.textAlignment = textAlignment
         label.font = isBold ? UIFont.boldSystemFont(ofSize: fontSize) : UIFont.systemFont(ofSize: fontSize)
     }
     
-    func fetchRepositoryImage() {
+    private func fetchRepositoryImage() {
         guard let searchViewController = repositorySearchViewController else { return }
         guard let selectedIndex = searchViewController.selectedRowIndex else { return }
         let repository = searchViewController.searchRepositories[selectedIndex]
