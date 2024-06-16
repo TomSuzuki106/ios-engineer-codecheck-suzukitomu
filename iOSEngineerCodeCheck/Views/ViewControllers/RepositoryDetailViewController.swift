@@ -125,7 +125,7 @@ class RepositoryDetailViewController: UIViewController {
     }
     
     func fetchRepositoryImage(from urlString: String) {
-        NetworkManager.shared.fetchRepositoryImage(from: urlString) { [weak self] result in
+        GitHubRepositoryImageFetcher.shared.fetchRepositoryImage(from: urlString) { [weak self] result in
             switch result {
             case .success(let img):
                 DispatchQueue.main.async {

@@ -29,7 +29,7 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
     
     // RepositorySearchViewControllerの破棄時に、URLSessionTaskを解放
     override func viewWillDisappear(_ animated: Bool) {
-        NetworkManager.shared.cancelSearch()
+        GitHubRepositorySearcher.shared.cancelSearch()
     }
     
     func setupUI() {
@@ -46,7 +46,7 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        NetworkManager.shared.cancelSearch()
+        GitHubRepositorySearcher.shared.cancelSearch()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -55,7 +55,7 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
     }
 
     private func searchRepositories(with searchTerm: String) {
-        NetworkManager.shared.searchRepositories(with: searchTerm) { [weak self] result in
+        GitHubRepositorySearcher.shared.searchRepositories(with: searchTerm) { [weak self] result in
             guard let self = self else { return }
             self.handleSearchResult(result)
         }
