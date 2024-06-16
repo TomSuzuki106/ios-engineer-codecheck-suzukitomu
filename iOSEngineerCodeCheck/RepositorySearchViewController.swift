@@ -9,7 +9,7 @@
 import UIKit
 
 class RepositorySearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UINavigationControllerDelegate {
-
+    
     let searchBar = UISearchBar()
     let tableView = UITableView()
     var searchRepositories: [[String: Any]] = []
@@ -45,34 +45,70 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchTaskForRepositories?.cancel()
     }
-    
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // 入力された検索ワードが空でないことを確認
         guard let searchTerm = searchBar.text, !searchTerm.isEmpty else { return }
-        self.searchTerm = searchTerm
-        let apiURLString = "https://api.github.com/search/repositories?q=\(searchTerm)"
-        guard let url = URL(string: apiURLString) else { return }
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            
+        
+        // 検索処理の呼び出し
+        searchRepositories(with: searchTerm) { [weak self] result in
             guard let self = self else { return }
-            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                print("Failed to fetch JSON data")
-                // ユーザーにエラーメッセージを表示
-                DispatchQueue.main.async {
-                    self.showErrorAlert(message: "データの取得に失敗しました。インターネット接続を確認してください。")
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let repositories):
+                    // 成功した場合、取得したリポジトリのデータを保存し、テーブルビューをリロード
+                    self.searchRepositories = repositories
+                    self.tableView.reloadData()
+                case .failure(let error):
+                    // エラーが発生した場合、エラーメッセージを表示
+                    self.showErrorAlert(for: error)
                 }
+            }
+        }
+    }
+
+    // APIリクエストを実行するメソッド
+    func searchRepositories(with searchTerm: String, completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
+        let searchAPIURLString = "https://api.github.com/search/repositories?q=\(searchTerm)"
+        guard let searchAPIURL = URL(string: searchAPIURLString) else {
+            completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
+            return
+        }
+        
+        URLSession.shared.dataTask(with: searchAPIURL) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
                 return
             }
-            if let items = json["items"] as? [[String: Any]] {
-                self.searchRepositories = items
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+            
+            guard let data = data else {
+                completion(.failure(NSError(domain: "Data is nil", code: -1, userInfo: nil)))
+                return
             }
-        }.resume()  // データタスクを実行
+            do {
+                // JSONデータをパース
+                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let items = json["items"] as? [[String: Any]] {
+                    completion(.success(items))
+                } else {
+                    completion(.failure(NSError(domain: "Failed to parse JSON", code: -1, userInfo: nil)))
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume() // データタスクを実行
     }
-    
-    // エラーメッセージを表示するためのヘルパーメソッド
-    func showErrorAlert(message: String) {
+
+    func showErrorAlert(for error: Error) {
+        let message: String
+        
+        switch error {
+        case is URLError:
+            message = "ネットワークエラーが発生しました。インターネット接続を確認してください。"
+        default:
+            message = "エラーが発生しました。"
+        }
+        
         let alertController = UIAlertController(title: "エラー", message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alertController.addAction(okAction)
