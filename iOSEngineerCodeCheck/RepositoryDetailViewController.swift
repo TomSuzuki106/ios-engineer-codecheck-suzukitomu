@@ -42,7 +42,8 @@ class RepositoryDetailViewController: UIViewController {
     // デバイスの画面の向きが変更されるときに呼び出されるメソッド
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: { _ in
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            guard let self = self else { return }
             self.updateLayout(for: size)
         })
     }
@@ -137,11 +138,13 @@ class RepositoryDetailViewController: UIViewController {
         guard let owner = repository["owner"] as? [String: Any] else { return }
         guard let avatarURLString = owner["avatar_url"] as? String else { return }
         guard let avatarURL = URL(string: avatarURLString) else { return }
-        URLSession.shared.dataTask(with: avatarURL) { (data, response, error) in
+        URLSession.shared.dataTask(with: avatarURL) { [weak self] (data, response, error) in
+            guard let self = self else { return }
             guard let imageData = data, let image = UIImage(data: imageData) else { return }
             DispatchQueue.main.async {
                 self.repositoryImageView.image = image
             }
         }.resume()
+
     }
 }
