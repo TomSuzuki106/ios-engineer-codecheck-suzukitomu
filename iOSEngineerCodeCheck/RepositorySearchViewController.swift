@@ -8,9 +8,10 @@
 
 import UIKit
 
-class RepositorySearchViewController: UITableViewController, UISearchBarDelegate {
-    
-    @IBOutlet weak var searchBar: UISearchBar!
+class RepositorySearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UINavigationControllerDelegate {
+
+    let searchBar = UISearchBar()
+    let tableView = UITableView()
     var searchRepositories: [[String: Any]] = []
     var searchTaskForRepositories: URLSessionTask?
     var searchTerm: String?
@@ -18,8 +19,21 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+        title = "Root View Controller"
+        // ビューの背景色を、ダークモードとライトモードに対応した色に設定
+        view.backgroundColor = UIColor.dynamicBackgroundColor
         searchBar.text = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
+    func setupUI() {
+        view.addSubview(searchBar)
+        view.addSubview(tableView)
+        searchBar.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 56)
+        tableView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -71,12 +85,12 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
         repositoryDetailViewController.repositorySearchViewController = self
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchRepositories.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
         let repository = searchRepositories[indexPath.row]
         cell.textLabel?.text = repository["full_name"] as? String ?? ""
         cell.detailTextLabel?.text = repository["language"] as? String ?? ""
@@ -84,8 +98,10 @@ class RepositorySearchViewController: UITableViewController, UISearchBarDelegate
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedRowIndex = indexPath.row
-        performSegue(withIdentifier: "Detail", sender: self)
+        let detailViewController = RepositoryDetailViewController()
+        detailViewController.repositorySearchViewController = self
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
