@@ -21,7 +21,7 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
         title = "Root View Controller"
         // ビューの背景色を、ダークモードとライトモードに対応した色に設定
         view.backgroundColor = UIColor.dynamicBackgroundColor
-        searchBar.text = "GitHubのリポジトリを検索できるよー"
+        searchBar.placeholder = "GitHubのリポジトリを検索"
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
@@ -39,11 +39,11 @@ class RepositorySearchViewController: UIViewController, UITableViewDelegate, UIT
         tableView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
     }
     
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        // 検索バーの初期値を削除
-        searchBar.text = ""
-        return true
-    }
+//    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+//        // 検索バーの初期値を削除
+//        searchBar.text = ""
+//        return true
+//    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         GitHubRepositorySearcher.shared.cancelSearch()
