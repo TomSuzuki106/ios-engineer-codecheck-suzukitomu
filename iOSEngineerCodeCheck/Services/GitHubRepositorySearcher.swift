@@ -8,12 +8,11 @@
 
 import UIKit
 
-class NetworkManager {
+class GitHubRepositorySearcher {
     private var searchTask: URLSessionTask?
-    
     // シングルトンパターンを利用するためNetworkManagerクラスのインスタン化を禁止
     private init() {}
-    static let shared = NetworkManager()
+    static let shared = GitHubRepositorySearcher()
     
     func searchRepositories(with searchTerm: String, completion: @escaping (Result<[RepositoryModel], Error>) -> Void) {
         let searchAPIURLString = "https://api.github.com/search/repositories?q=\(searchTerm)"
