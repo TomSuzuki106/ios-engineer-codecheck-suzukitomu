@@ -15,16 +15,18 @@ protocol RepositoryDetailViewModelDelegate: AnyObject {
 
 class RepositoryDetailViewModel {
     private let repository: RepositoryModel
+    var imageFetcher: GitHubRepositoryImageFetching
     weak var delegate: RepositoryDetailViewModelDelegate?
     
-    init(repository: RepositoryModel, delegate: RepositoryDetailViewModelDelegate) {
+    init(repository: RepositoryModel, delegate: RepositoryDetailViewModelDelegate, imageFetcher: GitHubRepositoryImageFetching) {
         self.repository = repository
         self.delegate = delegate
+        self.imageFetcher = imageFetcher
     }
     
     func fetchRepositoryImage() {
         let avatarURL = repository.owner.avatarURL
-        GitHubRepositoryImageFetcher.shared.fetchRepositoryImage(from: avatarURL) { [weak self] result in
+        imageFetcher.fetchRepositoryImage(from: avatarURL) { [weak self] result in
             guard let self = self else { return }
             
             switch result {

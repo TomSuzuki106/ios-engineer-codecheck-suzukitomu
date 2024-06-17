@@ -8,11 +8,11 @@
 
 import UIKit
 
-class GitHubRepositoryImageFetcher {
-    // シングルトンパターンを利用するためNetworkManagerクラスのインスタン化を禁止
-    private init() {}
-    static let shared = GitHubRepositoryImageFetcher()
-    
+protocol GitHubRepositoryImageFetching {
+    func fetchRepositoryImage(from urlString: String, completion: @escaping (Result<UIImage?, Error>) -> Void)
+}
+
+class GitHubRepositoryImageFetcher: GitHubRepositoryImageFetching {    
     func fetchRepositoryImage(from urlString: String, completion: @escaping (Result<UIImage?, Error>) -> Void) {
         guard let imgURL = URL(string: urlString) else {
             let error = NSError(domain: "Invalid URL", code: -1, userInfo: nil)

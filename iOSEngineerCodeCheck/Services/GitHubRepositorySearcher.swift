@@ -8,12 +8,13 @@
 
 import Foundation
 
-class GitHubRepositorySearcher {
+protocol GitHubRepositorySearching {
+    func searchRepositories(with searchTerm: String, completion: @escaping (Result<[RepositoryModel], Error>) -> Void)
+    func cancelSearch()
+}
+
+class GitHubRepositorySearcher: GitHubRepositorySearching {
     private var searchTask: URLSessionTask?
-    // シングルトンパターンを利用するためNetworkManagerクラスのインスタン化を禁止
-    private init() {}
-    static let shared = GitHubRepositorySearcher()
-    
     func searchRepositories(with searchTerm: String, completion: @escaping (Result<[RepositoryModel], Error>) -> Void) {
         let searchAPIURLString = "https://api.github.com/search/repositories?q=\(searchTerm)"
         guard let searchAPIURL = URL(string: searchAPIURLString) else {

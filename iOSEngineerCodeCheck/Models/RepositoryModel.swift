@@ -11,7 +11,7 @@ struct RepositoriesResponse: Codable {
     let items: [RepositoryModel]
 }
 
-struct RepositoryModel: Codable {
+struct RepositoryModel: Codable, Equatable {
     let fullName: String
     let language: String?
     let stargazersCount: Int
@@ -31,7 +31,7 @@ struct RepositoryModel: Codable {
     }
 }
 
-struct Owner: Codable {
+struct Owner: Codable, Equatable {
     let avatarURL: String
     enum CodingKeys: String, CodingKey {
         case avatarURL = "avatar_url"
