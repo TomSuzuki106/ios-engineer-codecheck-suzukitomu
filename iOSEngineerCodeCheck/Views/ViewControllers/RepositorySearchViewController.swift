@@ -24,12 +24,13 @@ class RepositorySearchViewController: UIViewController {
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
-        viewModel = RepositorySearchViewModel(delegate: self)
+        let repositorySearcher = GitHubRepositorySearcher()
+        viewModel = RepositorySearchViewModel(delegate: self, repositorySearcher: repositorySearcher)
     }
     
     // RepositorySearchViewControllerの破棄時に、URLSessionTaskを解放
     override func viewWillDisappear(_ animated: Bool) {
-        GitHubRepositorySearcher.shared.cancelSearch()
+        viewModel.cancelSearch()
     }
     
     func setupUI() {
@@ -42,7 +43,7 @@ class RepositorySearchViewController: UIViewController {
 
 extension RepositorySearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        GitHubRepositorySearcher.shared.cancelSearch()
+        viewModel.cancelSearch()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

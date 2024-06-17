@@ -13,7 +13,6 @@
 		BFD945E3244DC5E80012785A /* RepositorySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945E2244DC5E80012785A /* RepositorySearchViewController.swift */; };
 		BFD945E8244DC5EB0012785A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFD945E7244DC5EB0012785A /* Assets.xcassets */; };
 		BFD945EB244DC5EB0012785A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFD945E9244DC5EB0012785A /* LaunchScreen.storyboard */; };
-		BFD945F6244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945F5244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift */; };
 		BFD94601244DC5EC0012785A /* iOSEngineerCodeCheckUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD94600244DC5EC0012785A /* iOSEngineerCodeCheckUITests.swift */; };
 		E2054CE22C1F150F0044D738 /* GitHubRepositorySearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2054CE12C1F150F0044D738 /* GitHubRepositorySearcher.swift */; };
 		E2054CE42C1F15620044D738 /* RepositoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2054CE32C1F15610044D738 /* RepositoryModel.swift */; };
@@ -21,6 +20,7 @@
 		E2E185702C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E1856F2C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift */; };
 		E2E185732C1F85B40086AA12 /* RepositorySearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E185722C1F85B40086AA12 /* RepositorySearchViewModel.swift */; };
 		E2E185772C1F97460086AA12 /* RepositoryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E185762C1F97460086AA12 /* RepositoryDetailViewModel.swift */; };
+		E2E1857B2C1FB7710086AA12 /* iRepositorySearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E1857A2C1FB7710086AA12 /* iRepositorySearchViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +50,6 @@
 		BFD945EA244DC5EB0012785A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BFD945EC244DC5EB0012785A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFD945F1244DC5EB0012785A /* iOSEngineerCodeCheckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSEngineerCodeCheckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BFD945F5244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSEngineerCodeCheckTests.swift; sourceTree = "<group>"; };
 		BFD945F7244DC5EB0012785A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFD945FC244DC5EB0012785A /* iOSEngineerCodeCheckUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSEngineerCodeCheckUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFD94600244DC5EC0012785A /* iOSEngineerCodeCheckUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSEngineerCodeCheckUITests.swift; sourceTree = "<group>"; };
@@ -61,6 +60,7 @@
 		E2E1856F2C1F67160086AA12 /* GitHubRepositoryImageFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubRepositoryImageFetcher.swift; sourceTree = "<group>"; };
 		E2E185722C1F85B40086AA12 /* RepositorySearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositorySearchViewModel.swift; sourceTree = "<group>"; };
 		E2E185762C1F97460086AA12 /* RepositoryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailViewModel.swift; sourceTree = "<group>"; };
+		E2E1857A2C1FB7710086AA12 /* iRepositorySearchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRepositorySearchViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,7 +125,7 @@
 		BFD945F4244DC5EB0012785A /* iOSEngineerCodeCheckTests */ = {
 			isa = PBXGroup;
 			children = (
-				BFD945F5244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift */,
+				E2E1857A2C1FB7710086AA12 /* iRepositorySearchViewModelTests.swift */,
 				BFD945F7244DC5EB0012785A /* Info.plist */,
 			);
 			path = iOSEngineerCodeCheckTests;
@@ -358,7 +358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BFD945F6244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift in Sources */,
+				E2E1857B2C1FB7710086AA12 /* iRepositorySearchViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,7 +559,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S7G9J68NLX;
+				DEVELOPMENT_TEAM = RK3KPH57WA;
 				INFOPLIST_FILE = iOSEngineerCodeCheckTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -580,7 +580,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S7G9J68NLX;
+				DEVELOPMENT_TEAM = RK3KPH57WA;
 				INFOPLIST_FILE = iOSEngineerCodeCheckTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -600,7 +600,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S7G9J68NLX;
+				DEVELOPMENT_TEAM = RK3KPH57WA;
 				INFOPLIST_FILE = iOSEngineerCodeCheckUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -620,7 +620,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S7G9J68NLX;
+				DEVELOPMENT_TEAM = RK3KPH57WA;
 				INFOPLIST_FILE = iOSEngineerCodeCheckUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

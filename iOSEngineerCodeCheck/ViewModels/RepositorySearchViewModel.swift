@@ -15,14 +15,17 @@ protocol RepositorySearchViewModelDelegate: AnyObject {
 
 class RepositorySearchViewModel {
     weak var delegate: RepositorySearchViewModelDelegate?
+    private let repositorySearcher: GitHubRepositorySearching
     var searchRepositories: [RepositoryModel] = []
     
-    init(delegate: RepositorySearchViewModelDelegate) {
+    init(delegate: RepositorySearchViewModelDelegate, repositorySearcher: GitHubRepositorySearching) {
         self.delegate = delegate
+        self.repositorySearcher = repositorySearcher
     }
     
     func searchRepositories(with searchTerm: String) {
-        GitHubRepositorySearcher.shared.searchRepositories(with: searchTerm) { [weak self] result in
+        repositorySearcher.searchRepositories(with: searchTerm) { [weak self] result in
+
             guard let self = self else { return }
             switch result {
             case .success(let repositories):
@@ -35,6 +38,6 @@ class RepositorySearchViewModel {
     }
     
     func cancelSearch() {
-        GitHubRepositorySearcher.shared.cancelSearch()
+        repositorySearcher.cancelSearch()
     }
 }
