@@ -33,7 +33,8 @@ class RepositoryDetailViewController: UIViewController {
         super.viewDidLoad()
         self.setupData()
         self.setupUI()
-        viewModel = RepositoryDetailViewModel(repository: repository, delegate: self)
+        let imageFetcher = GitHubRepositoryImageFetcher()
+        viewModel = RepositoryDetailViewModel(repository: repository, delegate: self, imageFetcher: imageFetcher)
         viewModel.fetchRepositoryImage()
     }
     
@@ -44,7 +45,6 @@ class RepositoryDetailViewController: UIViewController {
         watchersCountLabel.text = "\(repository.watchersCount) watchers"
         forksCountLabel.text = "\(repository.forksCount) forks"
         openIssuesCountLabel.text = "\(repository.openIssuesCount) open issues"
-        fetchRepositoryImage(from: repository.owner.avatarURL)
     }
     
     // デバイスの画面の向きが変更されるときに呼び出されるメソッド
@@ -127,19 +127,6 @@ class RepositoryDetailViewController: UIViewController {
         stackView.spacing = 8
         stackView.distribution = .equalSpacing
         return stackView
-    }
-    
-    func fetchRepositoryImage(from urlString: String) {
-        GitHubRepositoryImageFetcher.shared.fetchRepositoryImage(from: urlString) { [weak self] result in
-            switch result {
-            case .success(let img):
-                DispatchQueue.main.async {
-                    self?.repositoryImageView.image = img
-                }
-            case .failure:
-                self?.showPlaceholderImage()
-            }
-        }
     }
 }
 
